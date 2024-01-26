@@ -9,8 +9,12 @@ for _ in range(N):
         boy[Y-1] += 1
 ans = 0
 for i in range(6):
-    p, v = divmod(girl[i], 2)
-    ans += p+v
-    p, v = divmod(boy[i], 2)
-    ans += p+v
+    if girl[i]%K==0:
+        ans += girl[i]//K
+    else:
+        ans += girl[i]//K + 1
+    if boy[i]%K==0:
+        ans += boy[i]//K
+    else:
+        ans += boy[i]//K + 1
 print(ans)
