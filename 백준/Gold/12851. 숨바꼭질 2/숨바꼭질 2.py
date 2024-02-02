@@ -4,19 +4,19 @@ input = sys.stdin.readline
 sys.setrecursionlimit(10**5)
 def bfs(s):
     v = [0]*100001
-    q = deque([(s,0)])
     v[s] = 1
+    q = deque([(s,0)])
     ans = 0
     mn = 100001
     while q:
         c,d = q.popleft()
-        if c == K:      # n중에서 K와 같다면 최소이동횟수 mn에 저장
+        if mn < d:          # 최소이동횟수보다 커진다면 끝
+            return mn, ans
+        if c == K:          # n중에서 K와 같다면 최소이동횟수 mn에 저장
             mn = min(mn, d)
-            if mn == d:   # depth+1이 최소이동횟수라면 ++
+            if mn == d:     # 현재가 최소이동횟수라면 ++
                 ans += 1
-            elif mn < d:
-                return mn, ans
-        v[c] = 1
+        v[c] = 1    # 해당 이동 횟수에서 정답이 또 있을 수 있기 때문에 나중에 방문
         for n in (c-1, c+1, c*2):
             if 0 <= n <= 100000 and not v[n]:
                 q.append((n,d+1))
