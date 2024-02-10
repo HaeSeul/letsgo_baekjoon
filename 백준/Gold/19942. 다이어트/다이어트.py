@@ -10,7 +10,7 @@ def dfs(n, start, p, f, s, v, c):
     # 최저 영양소 기준 이상인지 확인
     if p >= mp and f >= mf and s >= ms and v >= mv:
         min_cost = c
-        ans.append([c, tmp[:]])
+        ans.append((c, *tmp))
         return
 
     for i in range(start, N):
@@ -34,4 +34,4 @@ if not ans:
 else:
     ans.sort(key = lambda x : (x[0], x[1]))
     print(ans[0][0])
-    print(*ans[0][1])
+    print(*ans[0][1:])
