@@ -3,13 +3,11 @@ arr=[list(map(int, input().split())) for _ in range(N)]
 
 # 끝나는 시간 기준 정렬
 arr.sort(key= lambda x:(x[1],x[0]))
-# 첫번째 포함하고 시작
-cnt=1
-e=arr[0][1]
+cnt=end=0
 
-for i in range(1,N):
-    # 이전 회의 끝나는 시간 이후인 경우
-    if e <= arr[i][0]:
-        e=arr[i][1]
+for s,e in arr:
+    # 이전 회의 끝나는 시간 이후 시작인 경우
+    if end <= s:
+        end = e     # 끝나는 시간 갱신
         cnt+=1
 print(cnt)
