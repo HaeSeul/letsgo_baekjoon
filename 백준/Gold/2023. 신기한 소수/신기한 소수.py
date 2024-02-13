@@ -1,5 +1,5 @@
 def prime(n):
-    for i in range(2, n-1):
+    for i in range(2, int(n**(1/2))+1):
         if n%i==0:
             return False
     return True
@@ -25,8 +25,7 @@ odd=[1,3,5,7,9]
 tmp=[]
 
 if N==1:
-    for i in prime_num:
-        print(i)
+    print(*prime_num, sep='\n')
 else:
     for i in range(len(prime_num)):
         dfs(1,prime_num[i])
