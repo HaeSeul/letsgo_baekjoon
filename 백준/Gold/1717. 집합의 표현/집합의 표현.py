@@ -1,3 +1,6 @@
+import sys
+input=sys.stdin.readline
+
 def find(a):
     if p[a]!=a:
         p[a] = find(p[a])
