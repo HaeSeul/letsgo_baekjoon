@@ -1,28 +1,14 @@
-def dfs(start):
-    global mx
-    for i in range(start-1, 0 ,-1):
-        if i + T[i] < start + 1:
-            lst.append(i)
-            dfs(i)
-            pay = 0
-            for e in lst:
-                pay += P[e]
-            mx = max(mx, pay)
-            lst.pop()
-
 N = int(input())
-T = [0]
-P = [0]
+T = []
+P = []
 for _ in range(N):
     t,p = map(int, input().split())
     T.append(t)
     P.append(p)
-mx = 0
+dp = [0]*(N+1)
 
-for i in range(N, 0, -1):
-    if i+T[i] <= N+1:
-        lst = [i]
-        mx = max(mx, P[i])
-        dfs(i)
-
-print(mx)
+for i in range(N):
+    for j in range(i + T[i], N+1):  # i번째 상담 이후 가능한 상담
+        if dp[j] < dp[i] + P[i]:
+            dp[j] = dp[i] + P[i]
+print(dp[-1])
