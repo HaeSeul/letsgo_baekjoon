@@ -11,6 +11,16 @@ def bfs(si,sj):
         if ci == N-1 and cj == M-1:
             return cd
 
+        for d in range(8):
+            if v[ci][cj] == K:  break
+            ni,nj = ci+horse[d][0], cj+horse[d][1]
+            if not (0 <= ni < N and 0 <= nj < M):   continue
+            if arr[ni][nj]:     continue
+            # 말의 이동이라면 +1
+            if v[ni][nj] == -1 or v[ni][nj] > v[ci][cj] + 1:
+                v[ni][nj] = v[ci][cj] + 1
+                q.append((ni, nj, cd + 1))
+
         for d in range(4):
             ni,nj = ci+monkey[d][0], cj+monkey[d][1]
             if not (0 <= ni < N and 0 <= nj < M):   continue
@@ -19,15 +29,6 @@ def bfs(si,sj):
                 v[ni][nj] = v[ci][cj]
                 q.append((ni, nj, cd + 1))
 
-        if v[ci][cj] == K:  continue
-
-        for d in range(8):
-            ni,nj = ci+horse[d][0], cj+horse[d][1]
-            if not (0 <= ni < N and 0 <= nj < M):   continue
-            if arr[ni][nj]:     continue
-            if v[ni][nj] == -1 or v[ni][nj] > v[ci][cj] + 1:
-                v[ni][nj] = v[ci][cj] + 1
-                q.append((ni, nj, cd + 1))
     return -1
 
 K = int(input())
