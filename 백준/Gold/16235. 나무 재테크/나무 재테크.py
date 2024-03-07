@@ -17,7 +17,7 @@ for _ in range(M):
 
 # K년 반복
 for _ in range(K):
-    grow = []
+    grow = [[0]*N for _ in range(N)]
 
     # 1. 양분먹거나 죽기
     for i in range(N):
@@ -33,23 +33,22 @@ for _ in range(K):
                     arr[i][j][0] -= tree            # 나이만큼 양분 추가
                     arr[i][j][1].append(tree+1)     # 1살 더 먹기
                     if (tree+1)%5 == 0:     # 5의 배수라면 가을에 번식
-                        grow.append((i,j))
+                        grow[i][j] += 1
                 else:               # 양분이 부족하다면 죽음
                     dead += (tree // 2)
 
             arr[i][j][0] += dead    # 죽은만큼 추가
 
-    # 2. 나무번식
-    if grow:
-        for i,j in grow:
-            for di,dj in dir:
-                ni,nj = i+di, j+dj
-                if not (0<=ni<N and 0<=nj<N): continue
-                arr[ni][nj][1].appendleft(1)
-
-    # 3. 양분추가
+    # 2. 나무번식 + 양분추가
     for i in range(N):
         for j in range(N):
+            if grow[i][j]:
+                cnt = grow[i][j]
+                for di, dj in dir:
+                    ni, nj = i + di, j + dj
+                    if not (0 <= ni < N and 0 <= nj < N): continue
+                    for _ in range(cnt):    # 자라야하는 만큼 추가
+                        arr[ni][nj][1].appendleft(1)
             arr[i][j][0] += plus[i][j]
 
 # 살아남은 나무 개수
