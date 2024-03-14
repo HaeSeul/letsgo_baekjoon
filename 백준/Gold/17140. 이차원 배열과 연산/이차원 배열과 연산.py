@@ -46,9 +46,12 @@ while True:
         arr.append(tmp)
 
     # 길이 차이만큼 0 더해주기
-    for r in arr:
-        for _ in range(mx_len - len(r)):
+    for i in range(len(arr)):
+        r = arr[i]
+        while len(r) < mx_len:
             r.append(0)
+        if len(r) > 100:
+            arr[i] = r[:100]
 
     if op == 1:     # L 연산이었다면 되돌려주기
         arr = list(map(list, zip(*arr)))
