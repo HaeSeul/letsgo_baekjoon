@@ -18,25 +18,21 @@ for (x,y), (d1,d2) in tmp:
     # 1번 선거구
     for r in range(1, x+d1):
         for c in range(1, y+1):
-            if (r,c) in ((x,y), (x+d1,y-d1), (x+d2,y+d2), (x+d1+d2,y-d1+d2), (x+d2+d1,y+d2-d1)): continue
             v[r][c] = 1
 
     # 2번 선거구
     for r in range(1, x+d2+1):
         for c in range(y+1, N+1):
-            if (r,c) in ((x,y), (x+d1,y-d1), (x+d2,y+d2), (x+d1+d2,y-d1+d2), (x+d2+d1,y+d2-d1)): continue
             v[r][c] = 2
 
     # 3번 선거구
     for r in range(x+d1, N+1):
         for c in range(1, y-d1+d2):
-            if (r,c) in ((x,y), (x+d1,y-d1), (x+d2,y+d2), (x+d1+d2,y-d1+d2), (x+d2+d1,y+d2-d1)): continue
             v[r][c] = 3
 
     # 4번 선거구
     for r in range(x+d2+1, N+1):
         for c in range(y-d1+d2, N+1):
-            if (r,c) in ((x,y), (x+d1,y-d1), (x+d2,y+d2), (x+d1+d2,y-d1+d2), (x+d2+d1,y+d2-d1)): continue
             v[r][c] = 4
 
     # 5번 선거구 경계선
