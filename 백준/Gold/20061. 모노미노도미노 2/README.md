@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 119932 KB, 시간: 392 ms
+메모리: 116388 KB, 시간: 360 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 3월 18일 17:15:17
+2024년 3월 19일 13:32:48
 
 ### 문제 설명
 
@@ -54,43 +54,43 @@
 
 <p>여기서 크기가 2×1인 블록을 (1, 3), (2, 3)에 놓으면 보드는 <그림 7>과 같이 변한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/911438b0-7b7f-43b8-b6cc-20c6390bc7e3/-/preview/" style="width: 614px; height: 614px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 614px; height: 614px;"></p>
 
 <p style="text-align: center;"><그림 7></p>
 
 <p>초록색 보드의 0, 1번 행과 파란색 보드의 0, 1번 열은 그림에는 연한색으로 표현되어 있는 특별한 칸이다. 초록색 보드의 0, 1번 행에 블록이 있으면, 블록이 있는 행의 수만큼 아래 행에 있는 타일이 사라지고, 초록색 보드의 모든 블록이 사라진 행의 수만큼 아래로 이동하고, 파란색 보드의 0, 1번 열에 블록이 있으면, 블록이 있는 열의 수만큼 오른쪽 열에 있는 타일이 사라지고, 파란색 보드의 모든 블록이 사라진 열의 수만큼 이동하게 된다. 위의 그림은 파란색 보드의 1번 열에 블록이 있기 때문에, 5번 열에 있는 블록이 모두 사라지고, 파란색 보드의 모든 블록이 오른쪽으로 한 칸 이동하게 된다. 따라서, 보드는 <그림 8>과 같이 변하게 된다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/9b59b0ff-ebfc-4283-9576-5bec2bf2f238/-/preview/" style="width: 615px; height: 615px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 615px; height: 615px;"></p>
 
 <p style="text-align: center;"><그림 8></p>
 
 <p>위의 보드에서 1×2인 블록을 (0, 0), (0, 1)에 놓으면 <그림 9>와 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/c2151fd5-4e43-4403-bf10-7cbef642a6eb/-/preview/" style="width: 608px; height: 614px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 608px; height: 614px;"></p>
 
 <p style="text-align: center;"><그림 9></p>
 
 <p>여기서 크기가 2×1인 블록을 (2, 0), (3, 0)에 놓으면 <그림 10>과 같이 변한다. 파란색 보드는 1번 열에 블록이 생겨서 오른쪽으로 한 칸씩 이동한 상태이다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/0fd074f1-72af-4ffe-95d0-038635b7a80c/-/preview/" style="width: 611px; height: 618px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 611px; height: 618px;"></p>
 
 <p style="text-align: center;"><그림 10></p>
 
 <p>크기가 2×1인 블록을 (1, 2), (2, 2)에 놓으면, <그림 11>과 같이 변한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/f5941153-b92d-42ef-b25c-453e600f884c/-/preview/" style="width: 601px; height: 612px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 601px; height: 612px;"></p>
 
 <p style="text-align: center;"><그림 11></p>
 
 <p>파란색 보드는 1번 열에 블록이 있기 때문에, 5번 열의 타일이 사라지고 모든 블록이 오른쪽으로 한 칸씩 이동하게 된다. 초록색 보드는 4번 행의 모든 칸에 타일이 있기 때문에, 1점을 얻으면서, 4번 행의 모든 타일이 사라진다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/1153c233-befa-477d-a385-a10be375ff50/-/preview/" style="width: 609px; height: 616px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 609px; height: 616px;"></p>
 
 <p style="text-align: center;"><그림 12></p>
 
 <p><그림 12>는 <그림 11>의 상태에서 파란색 보드는 모든 블록이 오른쪽으로 한 칸 이동했고, 초록색 보드의 4번 행이 모두 사라진 상태이다. 이제, 초록색 보드에서 사라진 행의 위에 있는 블록이 아래로 한 칸씩 내려와야 한다. 이동한 후의 상태는 <그림 13>과 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/81a0a734-129b-47e8-8142-5579f747f678/-/preview/" style="width: 609px; height: 618px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 609px; height: 618px;"></p>
 
 <p style="text-align: center;"><그림 13></p>
 
