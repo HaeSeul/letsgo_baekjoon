@@ -30,6 +30,10 @@ arr = [[list() for _ in range(M)] for _ in range(N)]
 dir = ((0,0),(-1,0),(1,0),(0,1),(0,-1))   # 1상 2하 3우 4좌
 for _ in range(K):
     n,m,s,d,z = map(int, input().split())
+    if d==1 or d==2:
+        s = s % ((N-1)*2)
+    else:
+        s = s % ((M-1)*2)
     arr[n-1][m-1].append([s, d, z])     # (속력, 방향, 크기)
 
 score = 0
