@@ -1,3 +1,6 @@
+arrow = {0:'←', 1:'↖', 2:'↑', 3:'↗', 4:'→', 5:'↘', 6:'↓', 7:'↙'}
+arrow_idx = {v:k for k,v in arrow.items()}
+
 def dfs(op, n, i, j, cnt, v):  # 움직일 방향, n번 이동, 상어위치, 물고기개수
     global mx_fish
     if n == 3:  # 3번 이동하면 끝
@@ -16,10 +19,6 @@ def dfs(op, n, i, j, cnt, v):  # 움직일 방향, n번 이동, 상어위치, �
         dfs(op, n + 1, ni, nj, cnt + len(arr[ni][nj]), v)
 
 
-arrow = {0:'←', 1:'↖', 2:'↑', 3:'↗', 4:'→', 5:'↘', 6:'↓', 7:'↙'}
-arrow_idx = {v:k for k,v in arrow.items()}
-
-
 arr = [[list() for _ in range(4)] for _ in range(4)]
 smell = [[0 for _ in range(4)] for _ in range(4)]
 dir = ((0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1))
@@ -33,6 +32,10 @@ si,sj = map(lambda x:x-1, map(int, input().split()))
 
 
 # 사전순 이동방법 만들기
+'''
+    111 112 113 114 121 122 ... 444 (64개)
+숫자, 잡은 물고기 수 순으로 정렬
+'''
 order = []
 for i in range(4):
     tmp = []
@@ -43,7 +46,6 @@ for i in range(4):
 
 
 for _ in range(S):
-
     ### 복제할 물고기 저장
     fish = []
     for i in range(4):
@@ -80,6 +82,12 @@ for _ in range(S):
     arr = move
 
 
+    ### 상어 이동 전에 냄새 -1씩
+    for i in range(4):
+        for j in range(4):
+            if smell[i][j]: smell[i][j] -= 1
+
+
     ### 상어가 갈 수 있는 곳과 잡을 수 있는 물고기 개수 구하기
     mx_fish = []
 
@@ -97,18 +105,11 @@ for _ in range(S):
         # 상어가 이동하는 도중에 물고기가 있다면 없애고 냄새 뿌리기
         if arr[si][sj]:
             arr[si][sj] = []
-            smell[si][sj] = -1
+            smell[si][sj] = 2
 
-    ### 냄새 -1씩
-    for i in range(4):
-        for j in range(4):
-            if not smell[i][j]: continue
-            if smell[i][j] == -1:
-                smell[i][j] = 2
-            else:
-                smell[i][j] -= 1
 
     # 물고기 복제
+    # print(fish)
     for fi,fj,fd in fish:
         arr[fi][fj].append(arrow[fd])
 
