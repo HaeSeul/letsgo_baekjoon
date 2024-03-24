@@ -39,7 +39,7 @@
 			<p><그림 2></p>
 			</td>
 			<td style="width: 50%; text-align: center;">
-			<p><img alt="" src="https://upload.acmicpc.net/fb1d41e5-a420-4957-8fe8-1a6f822b284e/-/preview/" style="width: 355px; height: 354px;"></p>
+			<p><img alt="" src="" style="width: 355px; height: 354px;"></p>
 
 			<p><그림 3></p>
 			</td>
