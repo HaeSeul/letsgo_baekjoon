@@ -1,89 +1,79 @@
-N,K = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(N)]
-v = [[list() for _ in range(N)] for _ in range(N)]
-dir = ((0,0),(0,1),(0,-1),(-1,0),(1,0))     # padding, 1우 2좌 3상 4하
-horses = []
-for k in range(K):
-    i,j,d = map(int, input().split())
-    horses.append([k+1, i-1, j-1, d])   # 말 번호, 위치, 방향
-    v[i-1][j-1].append(k+1)        # 말 번호
+class Horse:
+    def __init__(self, num, i, j, dr):
+        self.num = num
+        self.i, self.j = i,j
+        self.dr = dr
+    def __str__(self):
+        return f'{self.num}번째 말 {self.i, self.j}의 방향 {self.dr}'
 
-time = 0
-
-def number(ci,cj,n):
-    num = 0
-    for item in v[ci][cj]:
-        if item == n: break
-        num += 1
-    return num
 
 def play():
-    global time
-    while True:
+    global end
+    # 1번부터 이동
+    for h in horses[1:]:
+        # 내 위에 있는 말들 다같이 이동
+        idx = arr[h.i][h.j].index(h.num)
+        move = arr[h.i][h.j][idx:]
+        arr[h.i][h.j] = arr[h.i][h.j][:idx]
 
-        if time > 1000:
-            return -1
+        ni,nj = h.i+dir[h.dr][0], h.j+dir[h.dr][1]
+        blue = False
 
-        time += 1   # 턴 시작
+        if MAP[ni][nj] == WHITE:
+            arr[ni][nj] += move
+            if len(arr[ni][nj]) >= 4:
+                end = True
+                return
 
-        for k in range(len(horses)):
+        elif MAP[ni][nj] == RED:
+            arr[ni][nj] += move[::-1]
+            if len(arr[ni][nj]) >= 4:
+                end = True
+                return
 
-            n,ci,cj,cd = horses[k]      # 말 번호, 위치, 방향
-            ni,nj = ci+dir[cd][0], cj+dir[cd][1]
+        else:
+            if h.dr % 2 == 1: h.dr += 1
+            else : h.dr -= 1
+            ni, nj = h.i + dir[h.dr][0], h.j + dir[h.dr][1]
 
-            # 범위 넘어간 경우 : 파란색 취급
-            if not (0<=ni<N and 0<=nj<N) or arr[ni][nj] == 2:
-                # 방향 반대로
-                if cd % 2 == 1:
-                    cd += 1
-                    horses[k][3] += 1
-                else:
-                    cd -= 1
-                    horses[k][3] -= 1
+            if MAP[ni][nj] == WHITE:
+                arr[ni][nj] += move
+                if len(arr[ni][nj]) >= 4:
+                    end = True
+                    return
+            elif MAP[ni][nj] == RED:
+                arr[ni][nj] += move[::-1]
+                if len(arr[ni][nj]) >= 4:
+                    end = True
+                    return
+            else:   # 그위치에 그대로
+                arr[h.i][h.j] += move
+                blue = True
 
-                # 앞이 파란색이면 pass
-                ni,nj = ci+dir[cd][0], cj+dir[cd][1]
-                if not (0<=ni<N and 0<=nj<N) or arr[ni][nj] == 2:
-                    continue
+        # 해당 말들 위치 갱신
+        if not blue:
+            for x in move:
+                horses[x].i, horses[x].j = ni, nj
+    return
 
-                # 현재 말 위치에서 몇 번째에 있는지 확인
-                num = number(ci,cj,n)
+WHITE, RED, BLUE = 0,1,2
+dir = ((0,0),(0,1),(0,-1),(-1,0),(1,0))   # 오왼위아
 
-                # 현재 말 위에 쌓여있는 것 전부 이동
-                move = v[ci][cj][num:]
-                for h in move:
-                    horses[h-1][1], horses[h-1][2] = ni,nj
+N,K = map(int, input().split())
+MAP = [[2]*(N+2)]+[[2]+list(map(int, input().split()))+[2] for _ in range(N)]+[[2]*(N+2)]
+arr = [[list() for _ in range(N+2)] for _ in range(N+2)]
+horses = [None]
 
-                # 앞 칸이 흰색인 경우
-                if arr[ni][nj] == 0:
-                    v[ni][nj] += v[ci][cj][num:]
-                # 앞 칸이 빨간색인 경우
-                elif arr[ni][nj] == 1:
-                    v[ni][nj] += v[ci][cj][num:][::-1]
-                v[ci][cj] = v[ci][cj][:num]
-                if len(v[ni][nj]) >= 4:
-                    return time
+for k in range(1,K+1):
+    r,c,d = map(int, input().split())
+    arr[r][c].append(k)     # 번호만 담아두기
+    horses.append(Horse(k,r,c,d))
 
-            # 흰색으로 이동
-            elif arr[ni][nj] == 0:
-                num = number(ci,cj,n)
-                move = v[ci][cj][num:]
-                for h in move:
-                    horses[h - 1][1], horses[h - 1][2] = ni, nj
-                v[ni][nj] += v[ci][cj][num:]
-                v[ci][cj] = v[ci][cj][:num]
-                if len(v[ni][nj]) >= 4:
-                    return time
-
-            # 빨간색으로 이동
-            elif arr[ni][nj] == 1:
-                num = number(ci,cj,n)
-                move = v[ci][cj][num:]
-                for h in move:
-                    horses[h - 1][1], horses[h - 1][2] = ni, nj
-                v[ni][nj] += v[ci][cj][num:][::-1]
-                v[ci][cj] = v[ci][cj][:num]
-                if len(v[ni][nj]) >= 4:
-                    return time
-
-print(play())
+end = False
+for turn in range(1,1001):
+    play()
+    if end :
+        print(turn)
+        break
+else:
+    print(-1)
