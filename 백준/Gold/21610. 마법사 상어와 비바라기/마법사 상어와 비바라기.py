@@ -1,47 +1,44 @@
 N,M = map(int, input().split())
+dir = ((0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1))  # 1,3,5,7: 대각선
 arr = [list(map(int, input().split())) for _ in range(N)]
+nxt = [[0]*N for _ in range(N)]
+for i,j in ((N, 1), (N, 2), (N-1, 1), (N-1, 2)):
+    nxt[i-1][j-1] = 1
 
-# 0번째에 padding 추가
-dir = ((0,0),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1))
-# 초기 구름 위치
-now = [(N-2, 0), (N-2, 1), (N-1, 0), (N-1, 1)]
+for _ in range(M):
+    d,s = map(int, input().split())
+    d -= 1
 
-# M번 반복
-for n in range(M):
-    d, s = map(int, input().split())
-    prev = []  # (직전 구름 위치 i, j, 대각선체크)
-    v = [[0] * N for _ in range(N)]
-
-    # now에 있는 구름 이동
-    for ci, cj in now:
-        di, dj = (ci + dir[d][0] * s) % N, (cj + dir[d][1] * s) % N
-        prev.append([di, dj, 0])  # (옮긴 위치, 대각선체크)
-        v[di][dj] = 1
-        arr[di][dj] += 1  # 비내리기
-
-    # 구름 사라짐
-    now = []
-
-    # 현재 구름이 있는 곳(prev) 요소 하나씩 탐색하며 대각선 4방에 1 이상인 개수 세기
-    for i in range(len(prev)):
-        ci, cj = prev[i][0], prev[i][1]
-        for di, dj in ((-1, -1), (-1, 1), (1, -1), (1, 1)):
-            ni, nj = ci + di, cj + dj
-            if not (0 <= ni < N and 0 <= nj < N):   continue
-            if arr[ni][nj]:
-                prev[i][2] += 1
-    for i in range(len(prev)):
-        arr[prev[i][0]][prev[i][1]] += prev[i][2]
-
-    # prev인 곳 제외 2 이상인 칸 탐색
+    # 구름 이동 : now 배열에 새롭게 추가
+    now = [[0]*N for _ in range(N)]
     for i in range(N):
         for j in range(N):
-            if arr[i][j] < 2:   continue
-            if v[i][j]:         continue
-            now.append((i, j))
+            if not nxt[i][j]: continue
+            nxt[i][j] = 0
+            ni,nj = (i+dir[d][0] * s)%N, (j+dir[d][1] * s)%N
+            now[ni][nj] = 1
+            arr[ni][nj] += 1    # now 배열을 기준으로 물 내리기
+
+    # now 배열 기준으로 물복사버그
+    arr_copy = [l[::] for l in arr]
+    for i in range(N):
+        for j in range(N):
+            if not now[i][j]: continue
+            cnt = 0
+            for nd in (1,3,5,7):
+                ni,nj = i+dir[nd][0], j+dir[nd][1]
+                if not (0<=ni<N and 0<=nj<N): continue
+                if not arr[ni][nj]: continue
+                cnt += 1
+            arr_copy[i][j] += cnt
+    arr = arr_copy
+
+    # 2 이상인 곳
+    for i in range(N):
+        for j in range(N):
+            if now[i][j]: continue
+            if arr[i][j] < 2: continue
+            nxt[i][j] = 1
             arr[i][j] -= 2
 
-ans = 0
-for l in arr:
-    ans += sum(l)
-print(ans)
+print(sum(map(sum, arr)))
