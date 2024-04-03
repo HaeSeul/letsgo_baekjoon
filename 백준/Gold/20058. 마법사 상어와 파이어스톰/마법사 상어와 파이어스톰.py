@@ -1,78 +1,72 @@
 from collections import deque
 
-def bfs(si,sj):
-    group = 1   # 현재 얼음 덩어리 그룹 개수
-    v[si][sj] = group
-    q = deque([(si,sj)])
-    while q:
-        ci,cj = q.popleft()
-        for di,dj in ((-1,0),(0,1),(1,0),(0,-1)):
-            ni,nj = ci+di, cj+dj
+def OOB(i,j):
+    return not (0<=i<2**N and 0<=j<2**N)
 
-            # 범위, 얼음, 방문 체크
-            if not (0<=ni<2**N and 0<=nj<2**N): continue
-            if not arr[ni][nj]: continue
-            if v[ni][nj]: continue
+def turn(arr, L):
+    new = [[0]*(2**N) for _ in range(2**N)]
+    for r in range(0, 2**N, 2**L):
+        for c in range(0, 2**N, 2**L):  # 격자 시작점
 
-            group += 1
-            v[ni][nj] = group
-            q.append((ni,nj))
-    return group
+            tmp = [[0]*(2**L) for _ in range(2**L)]
+            for i in range(2**L):
+                for j in range(2**L):
+                    tmp[i][j] = arr[r+i][c+j]
 
-
-N,Q = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(2**N)]
-cmd = map(int, input().split())
-
-# Q개의 Level
-for L in cmd:
-
-    # 격자 90도 회전
-    for i in range(2**(N-L)):
-        for j in range(2**(N-L)):
-
-            # 격자 나누기
-            tmp = [[0]*2**L for _ in range(2**L)]
-            for ii in range(2**L):
-                for jj in range(2**L):
-                    tmp[ii][jj] = arr[i*2**L + ii][j*2**L + jj]
-
-            # 90도 회전
             tmp = list(map(list, zip(*tmp[::-1])))
 
-            # arr 갱신
-            for ii in range(2**L):
-                for jj in range(2**L):
-                    arr[i*2**L + ii][j*2**L + jj] = tmp[ii][jj]
+            for i in range(2**L):
+                for j in range(2**L):
+                    new[r+i][c+j] = tmp[i][j]
+    return new
 
-    # 얼음과 맞닿아 있는지 확인
-    check = []
+def reduce(arr):
+    new = [l[::] for l in arr]
     for i in range(2**N):
         for j in range(2**N):
-            # 얼음이 있는 곳만 확인
             if not arr[i][j]: continue
-
             cnt = 0
-            for di,dj in ((-1,0),(0,1),(1,0),(0,-1)):
+            for di,dj in dir:
                 ni,nj = i+di, j+dj
-                if not (0<=ni<2**N and 0<=nj<2**N): continue
-                if not arr[ni][nj]: continue
-                cnt += 1
-            # 사방에 얼음 있는 곳이 3개 미만이라면 얼음 녹음
+                if OOB(ni,nj): continue
+                if arr[ni][nj]: cnt += 1
             if cnt < 3:
-                check.append((i,j))
-    for i,j in check:
-        arr[i][j] -= 1
+                new[i][j] -= 1
+    return new
 
-# 남은 얼음 개수 & 최대 얼음 덩어리
-ice = 0
+def find_unit(i,j):
+    cnt = 1
+    v[i][j] = cnt
+    q = deque([(i,j)])
+    while q:
+        ci,cj = q.popleft()
+        for di,dj in dir:
+            ni,nj = ci+di, cj+dj
+            if OOB(ni,nj): continue
+            if v[ni][nj] : continue
+            if not arr[ni][nj]: continue
+            cnt += 1
+            v[ni][nj] = cnt
+            q.append((ni,nj))
+    return cnt
+
+
+N, Q = map(int, input().split())
+arr = [list(map(int, input().split())) for _ in range(2**N)]
+dir = ((-1,0),(0,1),(1,0),(0,-1))
+
 mx = 0
-v = [[0]*2**N for _ in range(2**N)]
+cmd = map(int, input().split())
+for L in cmd:
+    arr = turn(arr, L)
+    arr = reduce(arr)
+
+v = [[0]*(2**N) for _ in range(2**N)]
 for i in range(2 ** N):
     for j in range(2 ** N):
         if not arr[i][j]: continue
-        ice += arr[i][j]
-        if not v[i][j]:
-            mx = max(mx, bfs(i,j))
-print(ice)
+        if v[i][j]: continue
+        mx = max(mx, find_unit(i,j))
+
+print(sum(map(sum, arr)))
 print(mx)
