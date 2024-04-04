@@ -1,65 +1,66 @@
-# 현재 칸 id : 연결된 칸 id
-board = {0: 1, 1: 2, 2: 3, 3: 4, 4: 5,
-         5: 6, 6: 7, 7: 8, 8: 9, 9: 10,
-         10: 11, 11: 12, 12: 13, 13: 14, 14: 15,
-         15: 16, 16: 17, 17: 18, 18: 19, 19: 20,
-         21: 22, 22:23, 23: 29,
-         24: 25, 25: 29,
-         26: 27, 27: 28, 28: 29,
-         29: 30, 30: 31, 31: 20, 20: 32}
-
-# 파란 칸 id
-blue = {5: 21, 10: 24, 15: 26}
-
-# score[id]의 점수
-scores = [0, 2, 4, 6, 8, 10,
-         12, 14, 16, 18, 20,
-         22, 24, 26, 28, 30,
-         32, 34, 36, 38, 40,
-         13, 16, 19, 22, 24,
-         28, 27, 26, 25, 30,
-         35, 0]
-
-mx = -1
-dice = list(map(int, input().split()))
-horses = [0,0,0,0]
-
-def find(cur, move):
-    if cur in (5, 10, 15):  # 파란칸 말
-        nxt = blue[cur]
-        for _ in range(move - 1):
-            nxt = board[nxt]
+# 현재 칸을 기준으로 주사위 숫자에 따라 다음 칸이 어떤 건지 받아오기
+def get_next(num, now):
+    # 현재 칸이 파란색이라면 blue 딕셔너리 사용
+    if now in (5, 10, 15):
+        now = blue[now]
+        if now == 32: return now
+        for _ in range(num-1):
+            # 도착칸에 도달하면 숫자 상관없이 도착
+            if now == 32: return now
+            nxt = MAP[now]
+            now = nxt
     else:
-        nxt = cur
-        for _ in range(move):
-            if nxt == 32: return 32
-            nxt = board[nxt]
+        for _ in range(num):
+            # 도착칸에 도달하면 숫자 상관없이 도착
+            if now == 32: return now
+            nxt = MAP[now]
+            now = nxt
 
-    if nxt in horses:
-        return -1
+    # 이동한 위치에 다른 말이 있으면 안 됨 (도착위치면 ㄱㅊ)
+    if now != 32 and now in horses: return -1
 
-    return nxt
+    return now
 
 
-def dfs(n, score, horses):
+def dfs(n, sm):
     global mx
-    if n == 10:     # 10번 턴 후 끝
-        mx = max(mx, score)
+    # 10개 다 이동 후 최대 갱신 (백트래킹)
+    if n == 10: # 주사위 10개 숫자 끝
+        mx = max(mx, sm)
         return
 
-    move = dice[n]  # n번째 주사위 숫자
+    num = dice[n]   # n번째 주사위 숫자
 
-    # 현재 칸에서 move 칸 이동 후 다음 칸 구하기
-    for i in range(4):
-        cur = horses[i]
-        if cur == 32: continue  # 도착한 말 제외
-        nxt = find(cur, move)   # 다음 칸 구하기
-        if nxt == -1: continue  # 이미 그 칸에 말 있으면 제외
+    for x in range(4):  # 네 마리 말 중복 순열
+        now = horses[x] # 현재 시점 말
+        if now == 32: continue  # 이미 도착한 말 제외
 
-        horses[i] = nxt
-        dfs(n+1, score+scores[nxt], horses)
-        horses[i] = cur     # 되돌려주기
+        nxt = get_next(num, now)
+        if nxt == -1: continue  # 다음 위치에 말이 이미 있음
+
+        horses[x] = nxt
+        dfs(n+1, sm + score[nxt])
+        horses[x] = now     # 되돌려주기
 
 
-dfs(0, 0, horses)
+# 매 칸에 id 부여 (시작부터 도착까지)
+# 매 칸의 다음 칸으로 딕셔너리로 연결
+# 0 : 시작, 32 : 도착
+MAP = {21:22, 22:23, 23:26, 26:30, 30:31, 31:20,
+       24:25, 25:26, 27:28, 28:29, 29:26, 20:32}
+
+for i in range(20):
+    MAP[i] = i+1
+score = [x for x in range(0,41,2)] + [13, 16, 19, 22, 24, 25, 28, 27, 26, 30, 35, 0]
+
+
+# 시작칸이 파란색 -> 파란 화살표로 이동
+blue = {5:21, 10:24, 15:27}
+dice = list(map(int, input().split()))
+
+
+# 초기 말 : [0,0,0,0] -> 매 시점마다 말들이 있는 칸 id 저장
+horses = [0,0,0,0]
+mx = 0
+dfs(0, 0)
 print(mx)
