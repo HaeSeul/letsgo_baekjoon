@@ -19,7 +19,6 @@ def table(ptn):
 
 def KMP(T, P):
     tb = table(P) # 패턴 전처리 테이블
-    cnt = 0
     res = []        # ptn이 나오는 인덱스 저장
     i = 0
     for j in range(len(T)):
@@ -30,10 +29,9 @@ def KMP(T, P):
         if P[i]==T[j]:
             i += 1  # 패턴 인덱스 증가
             if i == len(P):  # 패턴의 끝까지 갔다면
-                cnt += 1
                 res.append(j - i + 2)  # 패턴 시작 인덱스(+1) 저장
                 i = tb[i - 1]  # 지금까지 같았던 구간 이후로 이동
-    print(cnt)
+    print(len(res))
     print(*res)
 
 T = input().rstrip()
