@@ -23,19 +23,15 @@ int main() {
     int N;
     cin >> N;
     
-    vector<Stu> students;
-    for (int i = 0; i < N; i++) {
-        Stu tmp;    // 임시 구조체
-        cin >> tmp.name >> tmp.k >> tmp.e >> tmp.m;
-        students.push_back(tmp);
-    }
+    vector<Stu> students(N);
+    for (int i = 0; i < N; i++)
+        cin >> students[i].name >> students[i].k >> students[i].e >> students[i].m;
 
     // 조건에 맞게 정렬
     sort(students.begin(), students.end(), compare);
 
-    for (const auto& s : students) {
+    for (const auto& s : students)
         cout << s.name << "\n";
-    }
     
     return 0;
 }
