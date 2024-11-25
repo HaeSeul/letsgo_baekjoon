@@ -4,6 +4,10 @@
 using namespace std;
 
 int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+    std::cout.tie(0);
+    
     int N, x, y;
     cin >> N;
 
